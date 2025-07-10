@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Proposal Form</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 40px;">
+  <h2>Test Proposal Submission Form</h2>
+  <form id="testForm">
+    <label for="clientName">Client Name:</label><br>
+    <input type="text" id="clientName" name="clientName" required><br><br>
+    
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="services">Services (comma separated):</label><br>
+    <input type="text" id="services" name="services" placeholder="SEO, Web Design"><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <pre id="output" style="margin-top: 20px; color: green;"></pre>
+
+  <script>
+    document.getElementById('testForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = {
+        clientName: document.getElementById('clientName').value,
+        email: document.getElementById('email').value,
+        services: document.getElementById('services').value.split(',').map(s => s.trim())
+      };
+
+      fetch('https://sebvas37.app.n8n.cloud/webhook/proposal-input', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(result => {
+        document.getElementById('output').textContent = "✅ Success:\n" + result;
+      })
+      .catch(error => {
+        document.getElementById('output').textContent = "❌ Error:\n" + error;
+        console.error("Fetch error:", error);
+      });
+    });
+  </script>
+</body>
+</html>
